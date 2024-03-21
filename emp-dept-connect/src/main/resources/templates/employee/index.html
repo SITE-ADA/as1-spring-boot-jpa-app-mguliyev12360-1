@@ -1,10 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Employee List</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #DDD; padding: 8px; text-align: left; }
+        th { background-color: #F2F2F2; }
+        a { color: #337AB7; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .footer { margin-top: 20px; display: flex; justify-content: space-between; }
+    </style>
 </head>
 <body>
+<h2>Employee List</h2>
 
+<div>
+    <form action="#" th:action="@{/employees/all-employees}" method="get">
+        <input type="text" name="lastName" th:value="${lastNameFilter}" placeholder="Filter by Last Name"/>
+        <button type="submit">Filter</button>
+    </form>
+</div>
+
+
+
+<div>
+    <h3>Sort By:</h3>
+    <a th:href="@{/employees/all-employees(page=${employeePage.number}, size=${employeePage.size}, sort='firstName,asc')}">First Name Ascending</a> |
+    <a th:href="@{/employees/all-employees(page=${employeePage.number}, size=${employeePage.size}, sort='firstName,desc')}">First Name Descending</a> |
+    <a th:href="@{/employees/all-employees(page=${employeePage.number}, size=${employeePage.size}, sort='lastName,asc')}">Last Name Ascending</a> |
+    <a th:href="@{/employees/all-employees(page=${employeePage.number}, size=${employeePage.size}, sort='lastName,desc')}">Last Name Descending</a>
+</div>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Salary</th>
+        <th>Department</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="employee : ${employeePage.content}">
+        <td th:text="${employee.id}"></td>
+        <td th:text="${employee.firstName}"></td>
+        <td th:text="${employee.lastName}"></td>
+        <td th:text="${employee.salary}"></td>
+        <td th:text="${employee.department.name}"></td>
+        <td>
+            <a th:href="@{/employees/edit/{id}(id=${employee.id})}">Update</a> /
+            <a th:href="@{/employees/delete/{id}(id=${employee.id})}" onclick="return confirm('Are you sure?')">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+
+<div class="footer">
+    <a th:if="${employeePage.hasPrevious()}"
+       th:href="@{/employees/all-employees(page=${employeePage.number - 1}, size=${employeePage.size}, sort=${sort})}">Previous</a>
+    <span>Page [[${employeePage.number + 1}]] of [[${employeePage.totalPages}]]</span>
+    <a th:if="${employeePage.hasNext()}"
+       th:href="@{/employees/all-employees(page=${employeePage.number + 1}, size=${employeePage.size}, sort=${sort})}">Next</a>
+</div>
+
+
+<a href="/employees/new">Add New Employee</a>
+<div class="footer">
+    <a href="/">Back to Home</a>
+</div>
 </body>
 </html>
