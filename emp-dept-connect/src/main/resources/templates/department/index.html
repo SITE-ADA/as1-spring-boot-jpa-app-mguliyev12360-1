@@ -1,10 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Department List</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #DDD; padding: 8px; text-align: left; }
+        th { background-color: #F2F2F2; }
+        a { color: #337AB7; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .footer { display: flex; justify-content: space-between; margin-top: 20px; }
+    </style>
 </head>
 <body>
+<h2>Department List</h2>
 
+
+<div class="filter-form">
+    <form th:action="@{/departments/all-departments}" method="get">
+        <input type="text" name="name" placeholder="Filter by Name" th:value="${nameFilter}"/>
+        <button type="submit">Filter</button>
+    </form>
+</div>
+
+
+<div>
+    <h3>Sort By:</h3>
+    <a th:href="@{/departments/all-departments(page=${departmentPage.number}, size=${departmentPage.size}, sort='name,asc')}">Name Ascending</a> |
+    <a th:href="@{/departments/all-departments(page=${departmentPage.number}, size=${departmentPage.size}, sort='name,desc')}">Name Descending</a>
+</div>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="department : ${departmentPage.content}">
+        <td th:text="${department.id}"></td>
+        <td th:text="${department.name}"></td>
+        <td>
+            <a th:href="@{/departments/edit/{id}(id=${department.id})}">Update</a> /
+            <a th:href="@{/departments/delete/{id}(id=${department.id})}" onclick="return confirm('Are you sure?')">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+
+
+
+
+<div class="footer">
+    <a th:if="${departmentPage.hasPrevious()}"
+       th:href="@{/departments/all-departments(page=${departmentPage.number - 1}, size=${departmentPage.size}, sort=${sort})}">Previous</a>
+    <span>Page [[${departmentPage.number + 1}]] of [[${departmentPage.totalPages}]]</span>
+    <a th:if="${departmentPage.hasNext()}"
+       th:href="@{/departments/all-departments(page=${departmentPage.number + 1}, size=${departmentPage.size}, sort=${sort})}">Next</a>
+</div>
+
+
+
+
+<a href="/departments/new">Add New Department</a>
+<div class="footer">
+    <a href="/">Back to Home</a>
+</div>
 </body>
 </html>
