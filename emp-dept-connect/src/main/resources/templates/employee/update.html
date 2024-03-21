@@ -2,9 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Update Employee</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        form { max-width: 600px; }
+        label, input, button { display: block; width: 100%; }
+        input, button { padding: 10px; margin-top: 5px; }
+        button { background-color: #FFA07A; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background-color: #FA8072; }
+    </style>
 </head>
 <body>
+<h2>Update Employee</h2>
+<form th:action="@{/employees/update/{id}(id=${employee.id})}" th:object="${employee}" method="post">
+    <input type="hidden" th:field="*{id}" />
 
+    <label for="firstName">First Name:</label>
+    <input type="text" th:field="*{firstName}" id="firstName" name="firstName" required>
+
+    <label for="lastName">Last Name:</label>
+    <input type="text" th:field="*{lastName}" id="lastName" name="lastName" required>
+
+    <label for="salary">Salary:</label>
+    <input type="number" th:field="*{salary}" id="salary" name="salary" required>
+
+    <label for="departmentId">Department ID:</label>
+    <input type="number" th:field="*{department.id}" id="departmentId" name="departmentId" required>
+
+    <button type="submit">Update</button>
+</form>
+<a href="/employees">Back to List</a>
 </body>
 </html>
